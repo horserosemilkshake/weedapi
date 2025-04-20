@@ -17,3 +17,40 @@ This repository is a SpringBoot and PostgreSQL program that hosts a set of Appli
 - Change the `spring.datasource.url, spring.datasource.username, spring.datasource.username` in `src\main\resources\application.properties` with the information you recorded earlier.
 - Back to the `weedapi` directory. Run `mvn clean install build` in the terminal and wait for a minute or two.
 - Navigate to the `target` folder. There should be a `weedapi-0.0.1-SNAPSHOT.jar`. Run that file to start the SpringBoot service.
+
+# use
+We use Postman to demonstrate the typical use cases.
+
+- Find a random strain:
+![image](https://github.com/user-attachments/assets/500c7aa9-8506-43f8-ad6c-856457381a75)
+
+- Get a list of possible effects:
+![image](https://github.com/user-attachments/assets/b34db801-7120-4eca-bf9e-eda8209886b3)
+
+- Get a list of possible flavours:
+![image](https://github.com/user-attachments/assets/c7ef026e-71e0-4b88-8f45-e48f57051d0d)
+
+- Find a specific strain by name:
+![image](https://github.com/user-attachments/assets/c75448ca-58ff-4ece-82aa-de04921e0dae)
+
+- If there isn't anything you need in the database, the program will return an empty JSON:
+![image](https://github.com/user-attachments/assets/ca620d57-a5f5-4af7-85db-c1a195593841)
+
+- You can find a list of strains with a non-negative rating not larger than 5.0 (higher means better, generally speaking):
+![image](https://github.com/user-attachments/assets/f481c1a7-b97d-4db4-acde-c3e8eb73099f)
+
+- You can also cross-over search parameters, for example:
+![image](https://github.com/user-attachments/assets/b49c5cac-9497-454f-a4a4-2c905c4a149a)
+The above query returns a list of strains with 4.7 marks and with Berry OR Tar flavours.
+
+- Another cross-over example:
+![image](https://github.com/user-attachments/assets/12b6fc86-dcc3-4f4a-9ccb-4711f3c6a049)
+The above query returns a list of strains with Rose OR Berry flavours AND will make people Sleepy OR Happy. 
+
+
+
+
+
+
+
+
