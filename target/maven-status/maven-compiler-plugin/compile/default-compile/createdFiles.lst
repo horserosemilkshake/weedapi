@@ -1,0 +1,8 @@
+com\project\weedapi\mapper\GenericStrainMapper.class
+com\project\weedapi\bean\GenericStrain.class
+com\project\weedapi\utils\ArrayTypeHandler.class
+com\project\weedapi\service\GenericStrainService.class
+com\project\weedapi\WeedapiApplication.class
+com\project\weedapi\config\AsyncConfig.class
+com\project\weedapi\controller\GenericStrainController.class
+com\project\weedapi\utils\Constants.class

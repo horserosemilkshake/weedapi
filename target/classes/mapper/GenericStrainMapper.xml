@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.weedapi.mapper.GenericStrainMapper">
+    <cache eviction="LRU" flushInterval="120000" readOnly="true" size="1024">
+    </cache>
+
+    <resultMap id="GenericStrainResultMap" type="com.project.weedapi.bean.GenericStrain">
+        <result property="strain" column="strain"/>
+        <result property="type" column="type"/>
+        <result property="rating" column="rating"/>
+        <result property="effects" column="effects" typeHandler="com.project.weedapi.utils.ArrayTypeHandler"/>
+        <result property="flavours" column="flavours" typeHandler="com.project.weedapi.utils.ArrayTypeHandler"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+    <select id="getRandomStrain" resultMap="GenericStrainResultMap" useCache="false">
+        SELECT * FROM strains ORDER BY RANDOM() LIMIT 1;
+    </select>
+
+    <select id="getAllStrains" resultMap="GenericStrainResultMap" useCache="false">
+        SELECT * FROM strains;
+    </select>
+
+    <select id="findStrain" parameterType="com.project.weedapi.bean.GenericStrain" resultMap="GenericStrainResultMap">
+        SELECT * FROM strains WHERE strain = #{strain} UNION
+
+        <if test="(type == null or '' == type) or rating == null">
+            SELECT * FROM strains WHERE type = #{type} or rating = #{rating}
+        </if>
+        <if test="(type != null and '' != type) and rating != null">
+            SELECT * FROM strains WHERE type = #{type} and rating = #{rating}
+        </if>
+
+        <if test="((type == null or '' == type) and rating == null) or ((effects == null and flavours == null) or ((effects != null and effects.length == 0) and (flavours != null and flavours.length == 0)))">
+            UNION
+        </if>
+        <if test="!(((type == null or '' == type) and rating == null) or ((effects == null and flavours == null) or ((effects != null and effects.length == 0) and (flavours != null and flavours.length == 0))))">
+            INTERSECT
+        </if>
+
+        <if test="(effects != null and effects.length > 0) and (flavours != null and flavours.length > 0)">
+            SELECT * FROM strains WHERE
+            <foreach item='effect' collection='effects' open="(" separator="OR" close=")">
+                #{effect} = ANY(effects)
+            </foreach>
+            AND
+            <foreach item='flavour' collection='flavours' open="(" separator="OR" close=")">
+                #{flavour} = ANY(flavours)
+            </foreach>
+        </if>
+        <if test="(effects != null and effects.length > 0) and (flavours == null)">
+            SELECT * FROM strains WHERE
+            <foreach item='effect' collection='effects' open="(" separator="OR" close=")">
+                #{effect} = ANY(effects)
+            </foreach>
+        </if>
+        <if test="(effects == null) and (flavours != null and flavours.length > 0)">
+            SELECT * FROM strains WHERE
+            <foreach item='flavour' collection='flavours' open="(" separator="OR" close=")">
+                #{flavour} = ANY(flavours)
+            </foreach>
+        </if>
+        <if test="(effects == null) and (flavours == null)">
+            SELECT * FROM strains WHERE 1 = 0;
+        </if>
+<!--        <if test="effects != null and effects.length > 0">-->
+<!--            SELECT * FROM strains WHERE-->
+<!--            <foreach item='effect' collection='effects'>-->
+<!--                #{effect} = ANY(effects) OR-->
+<!--            </foreach>-->
+<!--            1 = 0-->
+<!--        </if>-->
+<!--        <if test="flavours != null and flavours.length > 0">-->
+<!--            SELECT * FROM strains WHERE-->
+<!--            <foreach item='flavour' collection='flavours'>-->
+<!--                #{flavour} = ANY(flavours) OR-->
+<!--            </foreach>-->
+<!--            1 = 0;-->
+<!--        </if>-->
+    </select>
+
+    <select id="getFlavoursList">
+        SELECT flavour FROM flavours;
+    </select>
+
+    <select id="getEffectsList">
+        SELECT effect FROM effects;
+    </select>
+</mapper>
