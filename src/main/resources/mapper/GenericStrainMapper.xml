@@ -19,7 +19,7 @@
     </select>
 
     <select id="findStrain" parameterType="com.project.weedapi.bean.GenericStrain" resultMap="GenericStrainResultMap">
-        SELECT * FROM strains WHERE strain = #{strain} UNION
+        SELECT * FROM strains WHERE strain ILIKE #{strain} UNION
 
         <if test="(type == null or '' == type) or rating == null">
             SELECT * FROM strains WHERE type = #{type} or rating = #{rating}
